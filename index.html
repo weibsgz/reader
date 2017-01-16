@@ -6,14 +6,146 @@
         <meta name="format-detection" content="telephone=no">
         <link rel="stylesheet" href="css/reset.css">
         <style type="text/css">
-            
+            html{width: 100%; height: 100%; overflow-x:hidden;}
+            body{text-align: left; width: 100%; overflow: hidden; background-color: #e9dfc7}
+            .m-read-content{font-size: 14px; color: #555; line-height: 31px;padding: 15px;}
+            .m-read-content h4{font-size: 20px; color: #736357; border-bottom: 1px solid #736357; letter-spacing: 2px; margin-bottom: 1em}
+            .m-read-content p{text-indent: 2em; margin:0.5em 0; letter-spacing: 0px; line-height: 24px;}
+            .u-tab{height: 34px; margin:10px auto; line-height: 34px; border-radius: 8px; border:1px solid #858382;background-color: #000; font-size: 12px; opacity: 0.9;}
+            .u-tab li{display: inline-block; width: 49%; border-right:1px solid #858382; text-align: center;color: #fff;  }
+            .u-tab li:nth-child(2){border-right: 0;}
+            .m-button-bar{width: 70%; max-width: 800px; padding: 5px; margin:0 auto; padding-bottom: 70px;}
+
+            .top-nav{position: fixed; top: 0; left:0; height: 50px; width: 100%; z-index: 9999; background-color: #000; }
+            .icon-back{position: absolute; top: 14px; left:10px; color: #fff;}
+            .nav-title{position: absolute; top: 16px; left:42px; color: #fff;}
+
+            .bottom-nav {
+                position: fixed;
+                bottom: 0px;
+                height: 70px;
+                background: #000;
+                width: 100%;
+                opacity: 1;
+                z-index: 10004;
+                margin: 0 auto;
+                text-align: center;
+            }
+            .bottom-nav .item {
+                display: inline-block;
+                width: 32%;
+                color: #fff;
+                text-align: center;
+                margin: 0 auto;
+            }
+            .item-warp {
+                width: 26px;
+                margin: 0 auto;
+                position: relative;
+            }
+
+            .icon-text {
+                position: absolute;
+                top: 25px;
+                font-size: 10px;
+            }
         </style>
     </head>
     <body>
-        
+        <div id="root" class="container">
+            <div id="top-nav" class="top-nav">
+                <div class="icon-back"><</div>
+                <div class="nav-title">返回书架</div>
+            </div>
+
+            <div class="bottom-nav bottom_nav">
+                <div class="item menu-button" id="menu_button">
+                    <div class="item-warp">
+                        <div class="icon-menu"></div>
+                        <div class="icon-text">
+                            目录
+                        </div>
+                    </div>
+                </div>
+                <div class="item" id="font-button">
+                    <div class="item-warp">
+                        <div class="icon-ft"></div>
+                        <div class="icon-text">
+                            字体
+                        </div>
+                    </div>
+                </div>
+                <div class="item" id="night-button">
+                    <div class="item-warp" style="display:none" id="day_icon">
+                        <div class="icon-day"></div>
+                        <div class="icon-text">
+                            白天
+                        </div>
+                    </div>
+                    <div class="item-warp" id="night_icon">
+                        <div class="icon-night"></div>
+                        <div class="icon-text">
+                            夜间
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div id="fiction_chapter_title">
+                
+            </div>
+            <div id="fiction_container" class="m-read-content">
+                <h4>大主宰</h4>
+                <p>
+                2013年7月1日天蚕土豆第四本小说《大主宰》首发于起点中文网，与斗破苍穹和武动乾坤有联系，讲述着牧尘的故事。2016年11月，《大主宰》荣登2016中国泛娱乐指数盛典“中国IP价值榜-网络文学榜top10” 
+                </p>
+                <p>
+                2013年7月1日天蚕土豆第四本小说《大主宰》首发于起点中文网，与斗破苍穹和武动乾坤有联系，讲述着牧尘的故事。2016年11月，《大主宰》荣登2016中国泛娱乐指数盛典“中国IP价值榜-网络文学榜top10” 
+                </p>
+                <p>
+                2013年7月1日天蚕土豆第四本小说《大主宰》首发于起点中文网，与斗破苍穹和武动乾坤有联系，讲述着牧尘的故事。2016年11月，《大主宰》荣登2016中国泛娱乐指数盛典“中国IP价值榜-网络文学榜top10” 
+                </p>
+                 <p>
+                2013年7月1日天蚕土豆第四本小说《大主宰》首发于起点中文网，与斗破苍穹和武动乾坤有联系，讲述着牧尘的故事。2016年11月，《大主宰》荣登2016中国泛娱乐指数盛典“中国IP价值榜-网络文学榜top10” 
+                </p>
+                <p>
+                2013年7月1日天蚕土豆第四本小说《大主宰》首发于起点中文网，与斗破苍穹和武动乾坤有联系，讲述着牧尘的故事。2016年11月，《大主宰》荣登2016中国泛娱乐指数盛典“中国IP价值榜-网络文学榜top10” 
+                </p>
+                <p>
+                2013年7月1日天蚕土豆第四本小说《大主宰》首发于起点中文网，与斗破苍穹和武动乾坤有联系，讲述着牧尘的故事。2016年11月，《大主宰》荣登2016中国泛娱乐指数盛典“中国IP价值榜-网络文学榜top10” 
+                </p>
+                 <p>
+                2013年7月1日天蚕土豆第四本小说《大主宰》首发于起点中文网，与斗破苍穹和武动乾坤有联系，讲述着牧尘的故事。2016年11月，《大主宰》荣登2016中国泛娱乐指数盛典“中国IP价值榜-网络文学榜top10” 
+                </p>
+                <p>
+                2013年7月1日天蚕土豆第四本小说《大主宰》首发于起点中文网，与斗破苍穹和武动乾坤有联系，讲述着牧尘的故事。2016年11月，《大主宰》荣登2016中国泛娱乐指数盛典“中国IP价值榜-网络文学榜top10” 
+                </p>
+                <p>
+                2013年7月1日天蚕土豆第四本小说《大主宰》首发于起点中文网，与斗破苍穹和武动乾坤有联系，讲述着牧尘的故事。2016年11月，《大主宰》荣登2016中国泛娱乐指数盛典“中国IP价值榜-网络文学榜top10” 
+                </p>
+            </div>
+            <div class="m-button-bar">
+               <ul class="u-tab">
+                   <li id="prev_button">上一章</li>
+                   <li id="next_button">下一章</li>
+               </ul>
+            </div>
+        </div>
         <script src="lib/zepto.min.js"></script>
         <script>
-            window.jQuery = $;           
+            window.jQuery = $;
+            $(function(){
+                $("#night_icon").on("click",function(){
+                    $("#night_icon").hide();
+                    $("#day_icon").show();
+                })
+
+                $("#day_icon").on("click",function(){
+                    $("#night_icon").show();
+                    $("#day_icon").hide();
+                })
+            })
         </script>
         <script src="js/jquery.base64.js"></script>
         <script src="js/jquery.jsonp.js"></script>
