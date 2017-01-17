@@ -49,16 +49,60 @@
                 top: 25px;
                 font-size: 10px;
             }
+            .nav-pannel-bk{
+                position: fixed;
+                bottom: 70px;
+                height:135px;
+                width: 100%;
+                background-color: #000;
+                opacity: .9;
+                z-index: 10000;
+            }
+            .nav-pannel{
+                position: fixed;
+                 bottom: 70px;
+                height:135px;
+                width: 100%;
+                background:none;
+                color: #fff;
+                z-index: 10001;
+
+            }
+            .child-mod{ padding: 5px 10px;margin:15px;}
+            .child-mod span{display: inline-block; padding-right: 20px;
+                padding-left: 10px;}
+            .font-size-button{
+                background:none;
+                border: 1px #8c8c8c solid;
+                color: #fff;
+                border-radius: 16px;
+                padding: 5px 40px;
+            }
+            .child-mod button:nth-child(2){
+                margin-right: 10px;
+            }
+
+            .bk-container{position: relative; width: 30px; height: 30px; border-radius: 30px;vertical-align: middle;
+                background-color: #fff;display: inline-block;}
+            .bk-container-current{position: absolute; width:32px; height: 32px; border-radius: 16px; top:-2px; left: -2px;
+                border:1px #ff7800 solid; display: inline-block;}
+            .artical-action-mid{position: fixed; z-index: 10002;width: 100%;
+                height: 40%; top: 30%;}
         </style>
     </head>
     <body>
         <div id="root" class="container">
-            <div id="top-nav" class="top-nav">
+             <!-- 点击出现菜单 -->                
+            <div class="m-atical-action">
+                <div class="artical-action-mid" id="action_mid"></div>
+            </div>
+
+            <div id="top-nav" class="top-nav" style="display: none;">
                 <div class="icon-back"><</div>
                 <div class="nav-title">返回书架</div>
             </div>
 
-            <div class="bottom-nav bottom_nav">
+            <div class="bottom-nav bottom_nav" style="display: none;">
                 <div class="item menu-button" id="menu_button">
                     <div class="item-warp">
                         <div class="icon-menu"></div>
@@ -87,6 +131,21 @@
                         <div class="icon-text">
                             夜间
                         </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="nav-pannel-bk font-container" style="display: none;"></div>
+            <div class="nav-pannel font-container" id="font-container" style="display: none;">
+                <div class="child-mod">
+                    <span>字号</span>
+                    <button id="large-font" class="font-size-button">大</button>
+                    <button id="small-font" class="font-size-button">小</button>
+                </div>
+                <div class="child-mod">
+                    <span>背景</span>
+                    <div class="bk-container">
+                        <div class="bk-container-current"></div>
                     </div>
                 </div>
             </div>
@@ -151,7 +210,118 @@
         <script src="js/jquery.jsonp.js"></script>
 
         <script>
-            
+            (function(){
+                var Util = (function(){
+                    //设置前缀不会影响其他的key
+                    var prefix = 'html5_reader_'
+                    var StorageGetter = function(key){
+                        return localStorage.getItem(prefix+key)
+                    }
+                    var StorageSetter = function(key,value){
+                        return localStorage.setItem(prefix+key,value)
+                    }
+                    return{
+                        StorageGetter:StorageGetter,
+                        StorageSetter:StorageSetter
+                    }
+                })()
+                //避免每次点击都重新调用DOM元素，可以先存起来
+                var Dom = {
+                    top_nav:$("#top-nav"), //顶部导航
+                    bottom_nav:$(".bottom_nav"), //底部导航
+                    night_day_switch_button:$("#night-button"),
+                    font_container:$(".font-container"),
+                    font_button:$("#font-button")
+
+                };
+                var Win = $(window);
+                var Doc = $(document);
+                var RootContainer = $('#fiction_container');
+                var initFontSize = Util.StorageGetter('font-size');
+                initFontSize = parseInt(initFontSize);
+                if(!initFontSize){
+                    initFontSize = 14
+                }
+
+                RootContainer.css('font-size',initFontSize)
+
+                function main(){                    
+                    //整个项目得入口函数
+                    EventHandler();
+                }
+
+
+                function ReaderModel(){
+                    // 实现和阅读器相关数据的交互的方法
+                }
+
+                function ReaderBaseFrame(){
+                    //渲染进本的UI结构
+                }
+
+                function EventHandler(){
+                    //交互的事件绑定
+                    //安卓4.0之前click有300MS延迟
+                    $("#action_mid").click(function(){
+                        if(Dom.top_nav.css('display') =='none')
+                        {
+                            Dom.bottom_nav.show();
+                            Dom.top_nav.show();
+                        }
+                        else{
+                            Dom.bottom_nav.hide();
+                            Dom.top_nav.hide();
+                            Dom.font_container.hide()
+                        }
+                    })
+                    Dom.font_button.click(function(){
+                        //唤起字体面板
+                        if(Dom.font_container.css('display') == 'none')
+                        {
+                            Dom.font_container.show()
+                        }
+                        else{
+                            Dom.font_container.hide()
+                        }
+
+                    })
+                    
+                    Dom.night_day_switch_button.click(function(){
+                        //触发背景切换事件
+                    })
+
+                    $("#large-font").click(function(){
+                        if(initFontSize > 20)
+                        {
+                            return 
+                        }
+                        initFontSize += 1;
+
+                        RootContainer.css('font-size',initFontSize)
+                        Util.StorageSetter('font-size',initFontSize)
+                    })
+
+                    $("#small-font").click(function(){
+                        if(initFontSize < 12)
+                        {
+                            return 
+                        }
+                        initFontSize -=1;
+                         RootContainer.css('font-size',initFontSize)
+                         Util.StorageGetter('font-size')
+                    })
+
+                    Win.scroll(function(){
+                        Dom.bottom_nav.hide();
+                        Dom.top_nav.hide();
+                         Dom.font_container.hide()
+                    })
+                }
+
+                main();
+
+
+            })()
         </script>
     </body>
 </html>
