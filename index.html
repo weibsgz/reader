@@ -155,34 +155,7 @@
                 
             </div>
             <div id="fiction_container" class="m-read-content">
-                <h4>大主宰</h4>
-                <p>
-                2013年7月1日天蚕土豆第四本小说《大主宰》首发于起点中文网，与斗破苍穹和武动乾坤有联系，讲述着牧尘的故事。2016年11月，《大主宰》荣登2016中国泛娱乐指数盛典“中国IP价值榜-网络文学榜top10” 
-                </p>
-                <p>
-                2013年7月1日天蚕土豆第四本小说《大主宰》首发于起点中文网，与斗破苍穹和武动乾坤有联系，讲述着牧尘的故事。2016年11月，《大主宰》荣登2016中国泛娱乐指数盛典“中国IP价值榜-网络文学榜top10” 
-                </p>
-                <p>
-                2013年7月1日天蚕土豆第四本小说《大主宰》首发于起点中文网，与斗破苍穹和武动乾坤有联系，讲述着牧尘的故事。2016年11月，《大主宰》荣登2016中国泛娱乐指数盛典“中国IP价值榜-网络文学榜top10” 
-                </p>
-                 <p>
-                2013年7月1日天蚕土豆第四本小说《大主宰》首发于起点中文网，与斗破苍穹和武动乾坤有联系，讲述着牧尘的故事。2016年11月，《大主宰》荣登2016中国泛娱乐指数盛典“中国IP价值榜-网络文学榜top10” 
-                </p>
-                <p>
-                2013年7月1日天蚕土豆第四本小说《大主宰》首发于起点中文网，与斗破苍穹和武动乾坤有联系，讲述着牧尘的故事。2016年11月，《大主宰》荣登2016中国泛娱乐指数盛典“中国IP价值榜-网络文学榜top10” 
-                </p>
-                <p>
-                2013年7月1日天蚕土豆第四本小说《大主宰》首发于起点中文网，与斗破苍穹和武动乾坤有联系，讲述着牧尘的故事。2016年11月，《大主宰》荣登2016中国泛娱乐指数盛典“中国IP价值榜-网络文学榜top10” 
-                </p>
-                 <p>
-                2013年7月1日天蚕土豆第四本小说《大主宰》首发于起点中文网，与斗破苍穹和武动乾坤有联系，讲述着牧尘的故事。2016年11月，《大主宰》荣登2016中国泛娱乐指数盛典“中国IP价值榜-网络文学榜top10” 
-                </p>
-                <p>
-                2013年7月1日天蚕土豆第四本小说《大主宰》首发于起点中文网，与斗破苍穹和武动乾坤有联系，讲述着牧尘的故事。2016年11月，《大主宰》荣登2016中国泛娱乐指数盛典“中国IP价值榜-网络文学榜top10” 
-                </p>
-                <p>
-                2013年7月1日天蚕土豆第四本小说《大主宰》首发于起点中文网，与斗破苍穹和武动乾坤有联系，讲述着牧尘的故事。2016年11月，《大主宰》荣登2016中国泛娱乐指数盛典“中国IP价值榜-网络文学榜top10” 
-                </p>
+                
             </div>
             <div class="m-button-bar">
                <ul class="u-tab">
@@ -193,6 +166,7 @@
         </div>
         <script src="lib/zepto.min.js"></script>
         <script>
+            //JSONP插件依赖JQUERY 
             window.jQuery = $;
             $(function(){
                 $("#night_icon").on("click",function(){
@@ -211,6 +185,8 @@
 
         <script>
             (function(){
+                //使用ES6
+                'use strict'
                 var Util = (function(){
                     //设置前缀不会影响其他的key
                     var prefix = 'html5_reader_'
@@ -220,7 +196,22 @@
                     var StorageSetter = function(key,value){
                         return localStorage.setItem(prefix+key,value)
                     }
+                    //调用插件方法
+                    var getBSONP = function(url,callback){
+                        return $.jsonp({
+                            url:url,
+                            cache:true,
+                            //jsonp返回的函数名
+                            callback:'duokan_fiction_chapter',
+                            success:function(result){                               
+                                var data = $.base64.decode(result);
+                                var json = decodeURIComponent(escape(data));
+                                callback(json);
+                            }
+                        })
+                    }
                     return{
+                        getBSONP:getBSONP,
                         StorageGetter:StorageGetter,
                         StorageSetter:StorageSetter
                     }
@@ -236,6 +227,7 @@
                 };
                 var Win = $(window);
                 var Doc = $(document);
+                var readerModel,readerUI;
                 var RootContainer = $('#fiction_container');
                 var initFontSize = Util.StorageGetter('font-size');
                 initFontSize = parseInt(initFontSize);
@@ -247,16 +239,149 @@
 
                 function main(){                    
                     //整个项目得入口函数
+
+                    readerModel = ReaderModel();
+                    readerUI= ReaderBaseFrame(RootContainer)
+                    readerModel.init(function(data){
+                        readerUI(data)
+                    });
                     EventHandler();
                 }
 
 
                 function ReaderModel(){
+                    var chapter_id;
+                    var chapterTotal;
+                    var init = function(UIcallback){
+                        /*getFictionInfo(function(){
+                            getCurChapterContent(chapter_id,function(data){
+                                //数据渲染
+                                UIcallback && UIcallback(data);
+                            })
+                        })*/
+                        getFictionInfoPromise().then(function(d){
+                            //这里必须返回一个promise对象下边才能用then
+                            return getCurChapterContentPromise()
+                        }).then(function(d){
+                            UIcallback && UIcallback(d);
+                        })
+                    }
                     // 实现和阅读器相关数据的交互的方法
+                    var getFictionInfo = function(callback){
+                        $.get('data/chapter.json',function(data){
+                            //获得章节信息以后的回调
+                            console.log(data)
+                            chapter_id = Util.StorageGetter('last_chapter_id')
+                            if(chapter_id == null)
+                            {
+                                chapter_id = data.chapters[1].chapter_id;
+                            }
+
+                            chapterTotal = data.chapters.length;
+                            //判断有没有，有就执行
+                            callback && callback();
+                        },'json');
+                    }
+                    //es6 promise
+                    var getFictionInfoPromise = function(){
+                        return new Promise(function(resolve,reject){
+                            $.get('data/chapter.json',function(data){
+                                if(data.result == 0){
+                                    chapter_id = Util.StorageGetter('last_chapter_id')
+                                    if(chapter_id == null)
+                                    {
+                                        chapter_id = data.chapters[1].chapter_id;
+                                    }
+
+                                    chapterTotal = data.chapters.length;
+                                    resolve();
+                                }
+                                else{
+                                    reject();
+                                }
+                                                   
+                               
+                               
+                            },'json');
+                        });
+                    }
+
+
+
+                    var getCurChapterContent = function(chapter_id,callback){
+                        $.get('data/data'+chapter_id+'.json',function(data){
+                            if(data.result == 0){
+                                var url = data.jsonp;
+                                Util.getBSONP(url,function(data){
+                                    callback && callback(data);                                   
+                                });
+                            }                           
+                        },'json')
+                    }
+
+                    var getCurChapterContentPromise = function(){
+                        return new Promise(function(resolve,reject){
+                            $.get('data/data'+chapter_id+'.json',function(data){
+                                if(data.result == 0){
+                                    var url = data.jsonp;
+                                    Util.getBSONP(url,function(data){                                      
+                                        resolve(data)
+                                    });
+                                }
+                                else
+                                {
+                                    reject({msg:'error'});
+                                }
+                            },'json')
+                        })
+                    }
+
+
+
+
+                    var prevChapter = function(UIcallback){
+                        chapter_id = parseInt(chapter_id,10);
+                        console.log(chapter_id)
+                        if(chapter_id == 0)
+                        {
+                            return ;
+                        }
+                        chapter_id = chapter_id -1;
+                        getCurChapterContent(chapter_id,UIcallback)
+                        Util.StorageSetter('last_chapter_id',chapter_id)
+                    }
+                    var nextChapter = function(UIcallback){
+                        chapter_id = parseInt(chapter_id,10);
+                        if(chapter_id == chapterTotal)
+                        {
+                            return ;
+                        }
+                        chapter_id = chapter_id +1;
+                        getCurChapterContent(chapter_id,UIcallback)
+                        Util.StorageSetter('last_chapter_id',chapter_id)
+                    }
+                    return {
+                        init : init,
+                        prevChapter:prevChapter,
+                        nextChapter:nextChapter
+                    }
                 }
 
-                function ReaderBaseFrame(){
-                    //渲染进本的UI结构
+                function ReaderBaseFrame(container){
+                    //渲染基本的UI结构
+
+                    function parseChapterData(jsonData){
+                        var jsonObj = JSON.parse(jsonData);
+                        var html = '<h4>'+jsonObj.t+'</h4>';
+                        for(var i=0; i<jsonObj.p.length;i++){
+                            html += "<p>"+jsonObj.p[i]+"</p>"
+                        }
+                        return html;
+                    }
+                    return function(data){
+                        container.html(parseChapterData(data));
+                    }
+
                 }
 
                 function EventHandler(){
@@ -314,7 +439,20 @@
                     Win.scroll(function(){
                         Dom.bottom_nav.hide();
                         Dom.top_nav.hide();
-                         Dom.font_container.hide()
+                        Dom.font_container.hide()
+                    })
+
+                    //翻页
+                    $("#prev_button").click(function(){
+                        readerModel.prevChapter(function(data){
+                            readerUI(data)
+                        });
+                    })
+
+                    $("#next_button").click(function(){                       
+                        readerModel.nextChapter(function(data){
+                            readerUI(data)
+                        });
                     })
                 }
 
